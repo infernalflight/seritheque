@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Test{% endblock %}
+
+{% block body %}
+    <h2>Test</h2>
+    <p>{{ 'Je suis une page de test'|upper }}</p>
+
+    <p>Nous sommes le {{ 'now'|date('D d/m/Y H:i') }}</p>
+
+    <p>Série n° {{ id }}</p>
+
+    {% for index, jour in jours %}
+        {{ index ~ ' ' ~ jour ~ ', ' }}
+    {% endfor %}
+
+    <br>
+    {{ bidule|default('y a pas de bidule') }}
+<br>
+    {{ varHtml|raw }}
+
+
+    {% for element in tab %}
+        {{ element }}
+    {% else %}
+        Pas d'élément dans tab, ce tableau est vide
+    {% endfor %}
+
+
+
+{% endblock %}
