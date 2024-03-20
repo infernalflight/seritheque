@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Series{% endblock %}
+
+{% block body %}
+    <h2>Liste</h2>
+
+    <ul>
+        {% for serie in series %}
+            <li>{{ serie.name }}: {{ serie.overview }} - {{ serie.genres }}</li>
+        {% endfor %}
+
+    </ul>
+
+{% endblock %}
