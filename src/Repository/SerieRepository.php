@@ -21,6 +21,19 @@ class SerieRepository extends ServiceEntityRepository
         parent::__construct($registry, Serie::class);
     }
 
+    public function findSeriesOnlyReturning(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.status = :status')
+            ->setParameter(':status', 'returning')
+            ->andWhere('s.vote > :vote ')
+            ->setParameter(':vote', 8)
+            ->addOrderBy('s.firstAirDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+
     //    /**
     //     * @return Serie[] Returns an array of Serie objects
     //     */

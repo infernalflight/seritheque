@@ -2,6 +2,7 @@ body {
     background-color: darkblue;
     color: #EEE;
     font-family: 'Roboto', sans-serif;
+    padding: 10px;
 }
 
 .flex_div{

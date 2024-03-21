@@ -9,19 +9,33 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+#[Route('/serie', name: 'app_serie')]
 class SerieController extends AbstractController
 {
-    #[Route('/serie/list', name: 'app_serie_list')]
+    #[Route('/list', name: '_list')]
     public function list(SerieRepository $serieRepository): Response
     {
-        $series = $serieRepository->findAll();
+        //$series = $serieRepository->findAll();
+        $series = $serieRepository->findSeriesOnlyReturning();
 
         return $this->render('serie/index.html.twig', [
             'series' => $series
         ]);
     }
 
-    #[Route('serie/create', name: 'app_serie_create')]
+    #[Route('/detail/{id}', name: '_detail')]
+    public function detail(int $id, SerieRepository $serieRepository): Response
+    {
+        $serie = $serieRepository->find($id);
+
+        return $this->render('serie/detail.html.twig', [
+            'serie' => $serie
+        ]);
+    }
+
+
+
+    #[Route('/create', name: '_create')]
     public function create(EntityManagerInterface $em): Response
     {
         $serie = new Serie();

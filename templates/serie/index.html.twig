@@ -5,8 +5,7 @@
 {% block body %}
     <section>
         {% for serie in series %}
-            <a href=""><img src="" width="300px" loading="lazy" />{{ serie.name }} : {{ serie.overview }}
-            </a>
+            <a href="{{ path('app_serie_detail', {'id': serie.id}) }}"><img src="{{ asset('posters/series/' ~ serie.poster) }}" width="300px" loading="lazy" /></a>
         {% endfor %}
     </section>
 {% endblock %}

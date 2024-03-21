@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} :: Detail de la série {{ serie.name }}{% endblock %}
+
+{% block body %}
+    <h2>{{ serie.name }}</h2>
+
+    <span class="badge bg-black">{{ serie.genres }}</span>
+    <br>
+    <img src="{{ asset('posters/series/' ~ serie.poster) }}">
+
+    <p>{{ serie.overview }}</p>
+
+
+
+    <dl>
+        <dt>Date de lancement</dt>
+        <dd>{{ serie.firstAirDate|date('d/m/Y') }}</dd>
+        <dt>Status</dt>
+        <dd>{{ serie.status }}</dd>
+    </dl>
+
+
+{% endblock %}
