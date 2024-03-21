@@ -29,7 +29,9 @@ class SerieController extends AbstractController
         //$nbSeriesMAx = $serieRepository->count(['status' => 'returning']);
 
         $series = $serieRepository->findSeriesOnlyReturning($offset);
-        $nbSeriesMax = count($serieRepository->findSeriesOnlyReturning());
+
+        $nbSeriesMax = $serieRepository->findSeriesOnlyReturning();
+        //$nbSeriesMax = count($serieRepository->findSeriesOnlyReturning());
 
         $pagesMax = ceil($nbSeriesMax / 20);
 
