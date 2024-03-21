@@ -7,18 +7,22 @@
         {% block stylesheets %}
         {% endblock %}
 
-        {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+    {% block javascripts %}
+        {% block importmap %}
+            {{ importmap('app') }}
         {% endblock %}
-    </head>
-    <body>
-        <h1><img src="{{ asset('images/logo.png') }}"></h1>
-        <nav>
-            <ul>
-                <li><a href="{{ path('app_home') }}">Home</a></li>
-                <li><a href="{{ path('app_test', {'id' : 7, 'exemple' : 'machin'}) }}">Test</a></li>
-            </ul>
-        </nav>
-        {% block body %}{% endblock %}
-    </body>
+    {% endblock %}
+</head>
+<body>
+    <img src="{{ asset('images/logo.png') }}" />
+
+    <nav>
+        <ul style="display:flex; flex-direction: row;list-style: none;">
+            <li style="padding: 5px;"><a href="{{ path('app_home') }}">Home</a></li>
+            <li style="padding: 5px;"><a href="{{ path('app_serie_list') }}">Series</a></li>
+        </ul>
+    </nav>
+
+    {% block body %}{% endblock %}
+</body>
 </html>

@@ -3,13 +3,10 @@
 {% block title %}{{ parent() }} :: Series{% endblock %}
 
 {% block body %}
-    <h2>Liste</h2>
-
-    <ul>
+    <section>
         {% for serie in series %}
-            <li>{{ serie.name }}: {{ serie.overview }} - {{ serie.genres }}</li>
+            <a href=""><img src="" width="300px" loading="lazy" />{{ serie.name }} : {{ serie.overview }}
+            </a>
         {% endfor %}
-
-    </ul>
-
+    </section>
 {% endblock %}
