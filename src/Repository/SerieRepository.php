@@ -21,17 +21,25 @@ class SerieRepository extends ServiceEntityRepository
         parent::__construct($registry, Serie::class);
     }
 
-    public function findSeriesOnlyReturning(): array
+    public function findSeriesOnlyReturning(int $offset = null): array
     {
-        return $this->createQueryBuilder('s')
+        $q = $this->createQueryBuilder('s')
             ->andWhere('s.status = :status')
             ->setParameter(':status', 'returning')
             ->andWhere('s.vote > :vote ')
             ->setParameter(':vote', 8)
-            ->addOrderBy('s.firstAirDate', 'DESC')
-            ->getQuery()
+            ->addOrderBy('s.firstAirDate', 'DESC');
+
+        if ($offset) {
+            $q->setFirstResult($offset)
+                ->setMaxResults(20);
+        }
+
+           return $q->getQuery()
             ->getResult();
     }
+
+
 
 
     //    /**

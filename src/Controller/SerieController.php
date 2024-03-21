@@ -12,14 +12,26 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/serie', name: 'app_serie')]
 class SerieController extends AbstractController
 {
-    #[Route('/list', name: '_list')]
-    public function list(SerieRepository $serieRepository): Response
+    #[Route('/list/{page}', name: '_list', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
+    public function list(SerieRepository $serieRepository, int $page): Response
     {
+        $offset = ($page - 1) * 20;
+
         //$series = $serieRepository->findAll();
-        $series = $serieRepository->findSeriesOnlyReturning();
+        //$nbSeriesMAx = $serieRepository->count();
+
+        //$series = $serieRepository->findBy(['status' => 'returning'], ['firstAirDate' => 'DESC'], 20, $offset);
+        //$nbSeriesMAx = $serieRepository->count(['status' => 'returning']);
+
+        $series = $serieRepository->findSeriesOnlyReturning($offset);
+        $nbSeriesMax = count($serieRepository->findSeriesOnlyReturning());
+
+        $pagesMax = ceil($nbSeriesMax / 20);
 
         return $this->render('serie/index.html.twig', [
-            'series' => $series
+            'series' => $series,
+            'currentPage' => $page,
+            'pagesMax' => $pagesMax,
         ]);
     }
 
