@@ -53,6 +53,11 @@ class Serie
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateModified = null;
 
+    public function __construct() {
+        $this->dateCreated = new \DateTime();
+    }
+
+
     public function getId(): ?int
     {
         return $this->id;
