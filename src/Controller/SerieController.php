@@ -7,6 +7,7 @@ use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/serie', name: 'app_serie')]
@@ -15,6 +16,10 @@ class SerieController extends AbstractController
     #[Route('/list/{page}', name: '_list', requirements: ['page' => '\d+'], defaults: ['page' => 1])]
     public function list(SerieRepository $serieRepository, int $page): Response
     {
+        if ($page < 1) {
+            throw new NotFoundHttpException('impossible');
+        }
+
         $offset = ($page - 1) * 20;
 
         //$series = $serieRepository->findAll();
