@@ -30,7 +30,7 @@ class SerieRepository extends ServiceEntityRepository
             ->setParameter(':vote', 8)
             ->addOrderBy('s.firstAirDate', 'DESC');
 
-        if ($offset) {
+        if ($offset || $offset === 0) {
             $q->setFirstResult($offset)
                 ->setMaxResults(20);
         }
