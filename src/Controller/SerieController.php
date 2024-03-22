@@ -74,7 +74,7 @@ class SerieController extends AbstractController
 
             $this->addFlash('success', 'La série a été créée. A +');
 
-            return $this->redirectToRoute('app_serie_list');
+            return $this->redirectToRoute('app_serie_detail', ['id' => $serie->getId()]);
         }
 
         return $this->render('serie/edit.html.twig', [
