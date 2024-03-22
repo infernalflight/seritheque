@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\SerieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
 class Serie
@@ -15,27 +17,34 @@ class Serie
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(min: 5, minMessage: 'Le nom doit avoir au moins {{ limit }} caractères')]
+    #[Assert\Length(max: 10, maxMessage: 'Le nom doit avoir {{ limit }} caractères max')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $overview = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Choice(choices: ['ENDED', 'CANCELED', 'RETURNING'], message: "Cette valeur n'est pas autorisée")]
     private ?string $status = null;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\Range(notInRangeMessage: 'Valeur doit etre comprise entre {{ min }} et {{ max }}', min: 3, max: 10)]
     private ?float $vote = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
     private ?string $popularity = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message : 'STP remplis cette valeur !!!!')]
     private ?string $genres = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\GreaterThan('today')]
     private ?\DateTimeInterface $firstAirDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\GreaterThan(propertyPath: 'firstAirDate')]
     private ?\DateTimeInterface $lastAirDate = null;
 
     #[ORM\Column(length: 255, nullable: true)]
