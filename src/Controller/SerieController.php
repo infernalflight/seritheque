@@ -25,21 +25,19 @@ class SerieController extends AbstractController
         //$series = $serieRepository->findAll();
         //$nbSeriesMAx = $serieRepository->count();
 
-        //$series = $serieRepository->findBy(['status' => 'returning'], ['firstAirDate' => 'DESC'], 20, $offset);
-        //$nbSeriesMAx = $serieRepository->count(['status' => 'returning']);
+        $series = $serieRepository->findBy(['status' => 'returning'], ['firstAirDate' => 'DESC'], 20, $offset);
+        $nbSeriesMax = $serieRepository->count(['status' => 'returning']);
 
         // Requete construite avec QueryBuilder
         //$series = $serieRepository->findSeriesOnlyReturning($offset);
         //$nbSeriesMax = $serieRepository->findSeriesOnlyReturning();
 
         // Requete faite avec DQL
-        $series = $serieRepository->findSeriesWithDql();
+        //$series = $serieRepository->findSeriesWithDql();
 
         // Requete avec Sql
-        $series = $serieRepository->findSeriesWithSql($offset);
-        $nbSeriesMax = $series[0]['nbMax'];
-
-        dd($series);
+        //$series = $serieRepository->findSeriesWithSql($offset);
+        //$nbSeriesMax = $series[0]['nbMax'];
 
         $pagesMax = ceil($nbSeriesMax / 20);
 
