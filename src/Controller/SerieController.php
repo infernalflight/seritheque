@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Serie;
+use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
@@ -59,9 +61,31 @@ class SerieController extends AbstractController
     }
 
 
-
     #[Route('/create', name: '_create')]
-    public function create(EntityManagerInterface $em): Response
+    public function create(Request $request, EntityManagerInterface $em): Response
+    {
+        $serie = new Serie();
+        $form = $this->createForm(SerieType::class, $serie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted()) {
+            $em->persist($serie);
+            $em->flush();
+
+            $this->addFlash('success', 'La série a été créée. A +');
+
+            return $this->redirectToRoute('app_serie_list');
+        }
+
+        return $this->render('serie/edit.html.twig', [
+            'serieForm' => $form,
+        ]);
+    }
+
+
+
+    #[Route('/createOld', name: '_createOld')]
+    public function createOld(EntityManagerInterface $em): Response
     {
         $serie = new Serie();
 
