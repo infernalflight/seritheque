@@ -41,6 +41,32 @@ class SerieRepository extends ServiceEntityRepository
         return $q->getQuery()->getResult();
     }
 
+    public function findSeriesWithDql(): array
+    {
+        $dql = "SELECT s FROM App\Entity\Serie as s WHERE s.status = :status AND s.vote > :vote ORDER BY s.firstAirDate DESC";
+
+        // requete pour avoir le nombre total de series avec ces clauses
+        // $dql = "SELECT COUNT(s) FROM App\Entity\Serie as s WHERE s.status = :status AND s.vote > :vote";
+
+        return $this->getEntityManager()
+            ->createQuery($dql)
+            ->setParameter(':status', 'returning')
+            ->setParameter(':vote', 8)
+            ->execute();
+    }
+
+    public function findSeriesWithSql(int $offset): array
+    {
+        $rawSql = "SELECT *, COUNT(*) over() as nbMax  FROM serie WHERE status = :status AND vote > :vote ORDER BY first_air_date DESC LIMIT 20 OFFSET :offset";
+
+        $conn = $this->getEntityManager()->getConnection();
+
+        return $conn->prepare($rawSql)
+            ->executeQuery([':status' => 'returning', ':vote' => 8, ':offset' => $offset])
+            ->fetchAllAssociative();
+
+    }
+
 
 
 
