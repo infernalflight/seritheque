@@ -34,9 +34,9 @@ class SerieType extends AbstractType
             ->add('status', ChoiceType::class, [
                 'placeholder' => ' -- Choisissez le statut --',
                 'choices' => [
-                    'Returning' => 'RETURNING',
-                    'Ended'     => 'ENDED',
-                    'Canceled'  => 'CANCELED'
+                    'Returning' => 'returning',
+                    'Ended'     => 'ended',
+                    'Canceled'  => 'Canceled'
                 ],
                 'row_attr' => [
                     'class' => 'input-group mb-3'
