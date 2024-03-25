@@ -51,9 +51,8 @@ class SerieController extends AbstractController
     }
 
     #[Route('/detail/{id}', name: '_detail')]
-    public function detail(int $id, SerieRepository $serieRepository): Response
+    public function detail(Serie $serie): Response
     {
-        $serie = $serieRepository->find($id);
 
         return $this->render('serie/detail.html.twig', [
             'serie' => $serie
@@ -80,6 +79,42 @@ class SerieController extends AbstractController
         return $this->render('serie/edit.html.twig', [
             'serieForm' => $form,
         ]);
+    }
+
+    #[Route('/update/{id}', name: '_update', requirements: ['id' => '\d+'])]
+    public function update(Serie $serie, EntityManagerInterface $em, Request $request): Response
+    {
+
+        $form = $this->createForm(SerieType::class, $serie);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $em->persist($serie);
+            $em->flush();
+
+            $this->addFlash('success', 'La série a été modifiée');
+
+            return $this->redirectToRoute('app_serie_detail', ['id' => $serie->getId()]);
+        }
+
+        return $this->render('serie/edit.html.twig', [
+            'serieForm' => $form,
+        ]);
+    }
+
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
+    public function delete(Serie $serie, EntityManagerInterface $em): Response
+    {
+
+        $em->remove($serie);
+
+        $em->flush();
+
+        $this->addFlash('success', 'Une série a été supprimée');
+
+        return $this->redirectToRoute('app_serie_list');
     }
 
 

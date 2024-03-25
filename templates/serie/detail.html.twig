@@ -20,5 +20,10 @@
         <dd>{{ serie.status }}</dd>
     </dl>
 
+    <br>
+
+    <a href="{{ path('app_serie_update', {'id' : serie.id}) }}" class="btn btn-primary">Editer</a>
+    <a href="{{ path('app_serie_delete', {'id' : serie.id}) }}" class="btn btn-danger" onclick="return('Etes-vous sur de supprimer cette série ?')">Supprimer</a>
+
 
 {% endblock %}
