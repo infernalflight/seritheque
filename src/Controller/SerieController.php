@@ -90,7 +90,6 @@ class SerieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $em->persist($serie);
             $em->flush();
 
@@ -104,15 +103,14 @@ class SerieController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'])]
-    public function delete(Serie $serie, EntityManagerInterface $em): Response
+    #[Route('/delete/{id}', name: '_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    public function delete(Serie $serie, Request $request, EntityManagerInterface $em): Response
     {
-
-        $em->remove($serie);
-
-        $em->flush();
-
-        $this->addFlash('success', 'Une série a été supprimée');
+        if ($this->isCsrfTokenValid('delete'.$serie->getId(), $request->get('_token'))) {
+            $em->remove($serie);
+            $em->flush();
+            $this->addFlash('success', 'Une série a été supprimée');
+        }
 
         return $this->redirectToRoute('app_serie_list');
     }
