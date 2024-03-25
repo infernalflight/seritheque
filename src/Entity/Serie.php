@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Serie
 {
     #[ORM\Id]
@@ -17,14 +18,14 @@ class Serie
 
     #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5, minMessage: 'Le nom doit avoir au moins {{ limit }} caractères')]
-    #[Assert\Length(max: 10, maxMessage: 'Le nom doit avoir {{ limit }} caractères max')]
+    #[Assert\Length(max: 255, maxMessage: 'Le nom doit avoir {{ limit }} caractères max')]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $overview = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\Choice(choices: ['ENDED', 'CANCELED', 'RETURNING'], message: "Cette valeur n'est pas autorisée")]
+    #[Assert\Choice(choices: ['ended', 'canceled', 'returning'], message: "Cette valeur n'est pas autorisée")]
     private ?string $status = null;
 
     #[ORM\Column(nullable: true)]
@@ -39,7 +40,7 @@ class Serie
     private ?string $genres = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Assert\GreaterThan('today')]
+    //#[Assert\GreaterThan('today')]
     private ?\DateTimeInterface $firstAirDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
@@ -60,11 +61,6 @@ class Serie
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $dateModified = null;
-
-    public function __construct() {
-        $this->dateCreated = new \DateTime();
-    }
-
 
     public function getId(): ?int
     {
@@ -208,9 +204,10 @@ class Serie
         return $this->dateCreated;
     }
 
-    public function setDateCreated(\DateTimeInterface $dateCreated): static
+    #[Orm\PrePersist]
+    public function setDateCreated(): static
     {
-        $this->dateCreated = $dateCreated;
+        $this->dateCreated = new \DateTime();
 
         return $this;
     }
@@ -220,9 +217,10 @@ class Serie
         return $this->dateModified;
     }
 
-    public function setDateModified(?\DateTimeInterface $dateModified): static
+    #[Orm\PreUpdate]
+    public function setDateModified(): static
     {
-        $this->dateModified = $dateModified;
+        $this->dateModified = new \DateTime();
 
         return $this;
     }
