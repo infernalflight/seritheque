@@ -224,4 +224,14 @@ class Serie
 
         return $this;
     }
+
+    #[ORM\PreRemove]
+    public function deleteImage(): static
+    {
+        if ($this->getPoster() && file_exists('posters/series/' . $this->getPoster())) {
+            unlink('posters/series/' . $this->getPoster());
+        }
+
+        return $this;
+    }
 }
