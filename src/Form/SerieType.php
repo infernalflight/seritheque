@@ -5,11 +5,13 @@ namespace App\Form;
 use App\Entity\Serie;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
 
 class SerieType extends AbstractType
 {
@@ -64,8 +66,21 @@ class SerieType extends AbstractType
             ->add('backdrop', null, [
                 'required' => false,
             ])
-            ->add('poster', null, [
+            ->add('poster_file', FileType::class, [
+                'mapped' => false,
                 'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'maxSizeMessage' => 'Ton image est trop lourde',
+                        'mimeTypes' => [
+                            'image/jpeg',
+                            'image/jpg',
+                            'image/png',
+                        ],
+                        'mimeTypesMessage' => "Ce Format n'est pas pris en charge"
+                    ])
+                ]
             ])
             ->add('tmdbId', null, [
                 'required' => false,

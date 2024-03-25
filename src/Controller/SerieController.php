@@ -7,10 +7,12 @@ use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 #[Route('/serie', name: 'app_serie')]
 class SerieController extends AbstractController
@@ -61,13 +63,21 @@ class SerieController extends AbstractController
 
 
     #[Route('/create', name: '_create')]
-    public function create(Request $request, EntityManagerInterface $em): Response
+    public function create(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
     {
         $serie = new Serie();
         $form = $this->createForm(SerieType::class, $serie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($form->get('poster_file')->getData() instanceof UploadedFile) {
+                $posterFile = $form->get('poster_file')->getData();
+                $fileName = $slugger->slug($serie->getName()).'-'.uniqid() . '.'.$posterFile->guessExtension();
+                $posterFile->move('posters/series', $fileName);
+                $serie->setPoster($fileName);
+            }
+
             $em->persist($serie);
             $em->flush();
 
@@ -82,7 +92,7 @@ class SerieController extends AbstractController
     }
 
     #[Route('/update/{id}', name: '_update', requirements: ['id' => '\d+'])]
-    public function update(Serie $serie, EntityManagerInterface $em, Request $request): Response
+    public function update(Serie $serie, EntityManagerInterface $em, Request $request, SluggerInterface $slugger): Response
     {
 
         $form = $this->createForm(SerieType::class, $serie);
@@ -90,6 +100,19 @@ class SerieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($form->get('poster_file')->getData() instanceof UploadedFile) {
+                $posterFile = $form->get('poster_file')->getData();
+                $fileName = $slugger->slug($serie->getName()).'-'.uniqid() . '.'.$posterFile->guessExtension();
+                $posterFile->move('posters/series', $fileName);
+
+                if ($serie->getPoster() && file_exists('posters/series/' . $serie->getPoster())) {
+                    unlink('posters/series/' . $serie->getPoster());
+                }
+
+                $serie->setPoster($fileName);
+            }
+
             $em->persist($serie);
             $em->flush();
 
