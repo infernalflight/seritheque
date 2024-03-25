@@ -4,12 +4,15 @@ namespace App\Form;
 
 use App\Entity\Serie;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 
@@ -88,6 +91,16 @@ class SerieType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Enregistrer',
             ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, function(FormEvent $formEvent) {
+                $serie = $formEvent->getData();
+                if ($serie && $serie->getPoster()) {
+                    $form = $formEvent->getForm();
+                    $form->add('delete_image', CheckboxType::class, [
+                        'mapped' => false,
+                        'required' => false,
+                    ]);
+                }
+            })
         ;
     }
 

@@ -9,5 +9,8 @@
 
     {{ form(serieForm) }}
 
+    {% if serie is defined and serie.poster is not empty %}
+        <img src="{{ asset('posters/series/' ~ serie.poster) }}">
+    {% endif %}
 
 {% endblock %}

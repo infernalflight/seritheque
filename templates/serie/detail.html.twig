@@ -7,7 +7,9 @@
 
     <span class="badge bg-black">{{ serie.genres }}</span>
     <br>
-    <img src="{{ asset('posters/series/' ~ serie.poster) }}">
+    {% if serie.poster is not empty %}
+        <img src="{{ asset('posters/series/' ~ serie.poster) }}">
+    {% endif %}
 
     <p>{{ serie.overview }}</p>
 

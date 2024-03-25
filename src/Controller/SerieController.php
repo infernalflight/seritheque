@@ -101,6 +101,11 @@ class SerieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            if ($form->has('delete_image') && $form->get('delete_image')->getData()) {
+                $serie->setPoster(null);
+                $serie->deleteImage();
+            }
+
             if ($form->get('poster_file')->getData() instanceof UploadedFile) {
                 $posterFile = $form->get('poster_file')->getData();
                 $fileName = $slugger->slug($serie->getName()).'-'.uniqid() . '.'.$posterFile->guessExtension();
@@ -121,6 +126,7 @@ class SerieController extends AbstractController
 
         return $this->render('serie/edit.html.twig', [
             'serieForm' => $form,
+            'serie' => $serie,
         ]);
     }
 
