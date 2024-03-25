@@ -102,8 +102,8 @@ class SerieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ($form->has('delete_image') && $form->get('delete_image')->getData()) {
-                $serie->setPoster(null);
                 $serie->deleteImage();
+                $serie->setPoster(null);
             }
 
             if ($form->get('poster_file')->getData() instanceof UploadedFile) {
