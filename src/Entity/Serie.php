@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\UniqueConstraint(columns: ['name', 'first_air_date'])]
 #[UniqueEntity(fields: ['name', 'firstAirDate'], message: 'Cette série existe déja (meme nom et meme date) !')]
 class Serie
 {
