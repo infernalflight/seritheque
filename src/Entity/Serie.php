@@ -70,9 +70,13 @@ class Serie
     #[ORM\OneToMany(targetEntity: Season::class, mappedBy: 'serie', orphanRemoval: true)]
     private Collection $seasons;
 
+    #[ORM\ManyToMany(targetEntity: Category::class, inversedBy: 'series')]
+    private Collection $categories;
+
     public function __construct()
     {
         $this->seasons = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -274,6 +278,30 @@ class Serie
                 $season->setSerie(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Category>
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): static
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories->add($category);
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): static
+    {
+        $this->categories->removeElement($category);
 
         return $this;
     }
