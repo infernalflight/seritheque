@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme seasonForm 'bootstrap_5_layout.html.twig' %}
+
+{% block title %}{{ parent() }} :: Editer une saison {% endblock %}
+
+{% block body %}
+    <h2>Editer une Saison</h2>
+
+    {{ form(seasonForm) }}
+{% endblock %}

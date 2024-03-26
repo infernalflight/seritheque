@@ -33,4 +33,15 @@
         <button class="btn btn-danger">Delete</button>
     </form>
 
+    <div>
+        <h2>Saisons</h2>
+        <ul>
+        {% for season in serie.seasons %}
+            <li>{{ season.number }} : {{ season.overview }} ({{ season.firstAirDate|date('d/m/Y') }})</li>
+        {% else%}
+            <li>Pas de saison disponible</li>
+        {% endfor %}
+        </ul>
+    </div>
+
 {% endblock %}
