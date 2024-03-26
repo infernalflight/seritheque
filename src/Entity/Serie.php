@@ -18,7 +18,7 @@ class Serie
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     #[Assert\Length(min: 5, minMessage: 'Le nom doit avoir au moins {{ limit }} caractères')]
     #[Assert\Length(max: 255, maxMessage: 'Le nom doit avoir {{ limit }} caractères max')]
     private ?string $name = null;
