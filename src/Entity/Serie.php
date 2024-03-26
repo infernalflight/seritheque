@@ -5,10 +5,12 @@ namespace App\Entity;
 use App\Repository\SerieRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['name', 'firstAirDate'], message: 'Cette série existe déja (meme nom et meme date) !')]
 class Serie
 {
     #[ORM\Id]
@@ -16,7 +18,7 @@ class Serie
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, unique: true)]
     #[Assert\Length(min: 5, minMessage: 'Le nom doit avoir au moins {{ limit }} caractères')]
     #[Assert\Length(max: 255, maxMessage: 'Le nom doit avoir {{ limit }} caractères max')]
     private ?string $name = null;
