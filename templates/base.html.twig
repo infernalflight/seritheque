@@ -19,9 +19,18 @@
     <nav>
         <ul style="display:flex; flex-direction: row;list-style: none;">
             <li style="padding: 5px;"><a href="{{ path('app_home') }}">Home</a></li>
-            <li style="padding: 5px;"><a href="{{ path('app_serie_list') }}">Series</a></li>
-            <li style="padding: 5px;"><a href="{{ path('app_serie_create') }}">New Serie</a></li>
+            {% if is_granted('ROLE_USER') %}
+                <li style="padding: 5px;"><a href="{{ path('app_serie_list') }}">Series</a></li>
+            {% endif %}
+            {% if is_granted('ROLE_CONTRIB') %}
+                <li style="padding: 5px;"><a href="{{ path('app_serie_create') }}">New Serie</a></li>
+            {% endif %}
             <li style="padding: 5px;"><a href="{{ path('app_season_create') }}">New Season</a></li>
+            {% if is_granted('IS_AUTHENTICATED') %}
+                <li style="padding: 5px;"><a href="{{ path('app_logout') }}">Déconnexion</a></li>
+            {% else %}
+                <li style="padding: 5px;"><a href="{{ path('app_login') }}">Connexion</a></li>
+            {% endif %}
         </ul>
     </nav>
 
