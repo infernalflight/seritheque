@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Serie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -21,16 +22,20 @@ class SerieRepository extends ServiceEntityRepository
         parent::__construct($registry, Serie::class);
     }
 
-    public function findSeriesOnlyReturning(int $offset = null): array|int
+    public function findSeriesOnlyReturning(int $offset = null): Paginator|int
     {
         $q = $this->createQueryBuilder('s')
             ->andWhere('s.status = :status')
             ->setParameter(':status', 'returning')
-            ->andWhere('s.vote > :vote ')
-            ->setParameter(':vote', 8);
+ /*
+            ->andWhere('s.vote > :vote ')->setParameter(':vote', 8)
+*/
+        ;
 
         if ($offset || $offset === 0) {
-            $q->addOrderBy('s.firstAirDate', 'DESC')
+            $q->addSelect('seasons')
+                ->leftJoin('s.seasons', 'seasons')
+                ->addOrderBy('s.firstAirDate', 'DESC')
                 ->setFirstResult($offset)
                 ->setMaxResults(20);
         } else {
@@ -38,7 +43,11 @@ class SerieRepository extends ServiceEntityRepository
             return $q->getQuery()->getSingleScalarResult();
         }
 
-        return $q->getQuery()->getResult();
+        $q->getQuery();
+
+        $paginator = new Paginator($q);
+
+        return $paginator;
     }
 
     public function findSeriesWithDql(): array
