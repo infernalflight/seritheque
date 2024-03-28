@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Serie;
 use App\Form\SerieType;
+use App\Helper\FileUploader;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -66,7 +67,7 @@ class SerieController extends AbstractController
 
     #[Route('/create', name: '_create')]
     #[IsGranted('ROLE_CONTRIB')]
-    public function create(Request $request, EntityManagerInterface $em, SluggerInterface $slugger): Response
+    public function create(Request $request, EntityManagerInterface $em, FileUploader $fileUploader): Response
     {
         $serie = new Serie();
         $form = $this->createForm(SerieType::class, $serie);
@@ -75,9 +76,8 @@ class SerieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ($form->get('poster_file')->getData() instanceof UploadedFile) {
-                $posterFile = $form->get('poster_file')->getData();
-                $fileName = $slugger->slug($serie->getName()).'-'.uniqid() . '.'.$posterFile->guessExtension();
-                $posterFile->move('posters/series', $fileName);
+                $posterFile =$form->get('poster_file')->getData();
+                $fileName = $fileUploader->upload($posterFile, $serie->getName(), 'posters/series');
                 $serie->setPoster($fileName);
             }
 
@@ -96,7 +96,7 @@ class SerieController extends AbstractController
 
     #[Route('/update/{id}', name: '_update', requirements: ['id' => '\d+'])]
     #[IsGranted('ROLE_CONTRIB')]
-    public function update(Serie $serie, EntityManagerInterface $em, Request $request, SluggerInterface $slugger): Response
+    public function update(Serie $serie, EntityManagerInterface $em, Request $request, FileUploader $fileUploader): Response
     {
 
         $form = $this->createForm(SerieType::class, $serie);
@@ -112,8 +112,7 @@ class SerieController extends AbstractController
 
             if ($form->get('poster_file')->getData() instanceof UploadedFile) {
                 $posterFile = $form->get('poster_file')->getData();
-                $fileName = $slugger->slug($serie->getName()).'-'.uniqid() . '.'.$posterFile->guessExtension();
-                $posterFile->move('posters/series', $fileName);
+                $fileName = $fileUploader->upload($posterFile, $serie->getName(), 'posters/series');
 
                 $serie->deleteImage();
 
@@ -165,6 +164,5 @@ class SerieController extends AbstractController
 
         return new Response('Une nouvelle série a été crée en base. Va vérifier !');
     }
-
 
 }
